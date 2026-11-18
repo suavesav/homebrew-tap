@@ -1,0 +1,25 @@
+name: test
+on:
+  push:
+    branches: [main]
+  pull_request:
+jobs:
+  install:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install from this checkout as a tap
+        run: |
+          mkdir -p "$(brew --repository)/Library/Taps/suavesav"
+          cp -R "$GITHUB_WORKSPACE" "$(brew --repository)/Library/Taps/suavesav/homebrew-tap"
+          brew install suavesav/tap/tmux-band
+      - run: brew test suavesav/tap/tmux-band
+      - name: band install into a temp home, then doctor
+        run: |
+          export HOME="$RUNNER_TEMP/home" BAND_HOME="$RUNNER_TEMP/band"
+          mkdir -p "$HOME/.claude"
+          band install
+          band doctor || true
+          test -x "$BAND_HOME/bin/band-new"
+          grep -q band-state.sh "$HOME/.claude/settings.json"
+          band uninstall

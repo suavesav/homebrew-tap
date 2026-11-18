@@ -5,7 +5,6 @@ class TmuxBand < Formula
   sha256 "cfbfacd3a9d0946c737838b8c63fb058a1d6c0bcdb778216ee8bef360b8f76e8"
   license "MIT"
 
-  depends_on "node"
   depends_on "tmux"
 
   def install
@@ -19,6 +18,8 @@ class TmuxBand < Formula
       Finish the setup (copies the files to ~/.local/share/band and adds the
       hooks to your Claude Code settings; run it again after an upgrade):
         band install
+
+      Needs Node 18 or newer on your PATH (brew install node).
     EOS
   end
 
